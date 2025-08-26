@@ -13,9 +13,9 @@ export const getMisProyecto=async(req,res)=>{
 }
 
 export const insertMisProyecto=async(req,res)=>{
-    const { id_compra, id_usuario, id_proyecto, tipo_proyecto, fecha_compra, precio_unitario} = req.body;
+    const { id_compra, id_usuario, id_proyecto, tipo_proyecto, precio_unitario} = req.body;
     try {
-        const [resultado] = await pool.query('INSERT INTO mis_proyectos(id_compra, id_usuario, id_proyecto, tipo_proyecto, fecha_compra, precio_unitario) VALUES (?,?,?,?,?,?)', [id_compra, id_usuario, id_proyecto, tipo_proyecto, fecha_compra, precio_unitario]);
+        const [resultado] = await pool.query('INSERT INTO mis_proyectos(id_compra, id_usuario, id_proyecto, tipo_proyecto, precio_unitario) VALUES (?,?,?,?,?)', [id_compra, id_usuario, id_proyecto, tipo_proyecto, precio_unitario]);
         res.status(201).json({ message: "Proyecto agregado correctamente", id: resultado.insertId });
     } catch (error) {
         console.error("Error al agregar proyecto: ", error);
