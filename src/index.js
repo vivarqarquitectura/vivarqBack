@@ -8,6 +8,7 @@ import Proyecto_render from './routes/proyecto/Proyecto_img_renders.routes.js';
 import Compras from './routes/compras/compras.routes.js';
 import Mercado_pago from './routes/Mercado_pago/Mercado_pago.routes.js'
 import ProyectoFavoritos from './routes/proyecto_favorito/favorito.route.js'
+import Calculos_sessiones from './routes/Calculo_sessiones/Calculos_sessiones.route.js';
 
 const app=express();
 const PORT=process.env.PORT ?? 4000 ; 
@@ -25,6 +26,7 @@ app.use(MisProyectos);
 app.use(Proyecto_render);
 app.use(Compras);
 app.use(Mercado_pago);
-app.use(ProyectoFavoritos)
+app.use(ProyectoFavoritos);
+app.use(Calculos_sessiones);
 
 app.listen(PORT ,()=> console.log("SERVER RUN " + PORT));
