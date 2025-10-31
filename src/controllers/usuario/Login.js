@@ -1,19 +1,18 @@
 import {pool} from '../../conexionDB.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {Login,Registro} from '../../services/usuario/usuario.js'
 
 //Metodo de logeo de un usuario
-export const Login = async (req, res) => {
+export const postLogin = async (req, res) => {
     const { usuario, clave } = req.body;
 
     try {
-        const [resultado] = await pool.query(
-            `SELECT id_usuario, nombre, apellido, correo, clave FROM usuario WHERE usuario = ?`,
-            [usuario]
-        );
+        //verifico si el usuario existe y se puede logear
+        const [resultado] = await Login(usuario);
 
         if (resultado.length === 0) {
-            return res.status(200).json([]);
+            return res.status(404).json([]);
         }
 
         const usuarioDB = resultado[0];
@@ -49,17 +48,14 @@ export const Login = async (req, res) => {
 
 
 //Metodo de logeo de un usuario
-export const Registro = async (req, res) => {
+export const postRegistro = async (req, res) => {
     const { nombre, apellido, correo, usuario, clave } = req.body;
 
     try {
         // Hashear la contraseña antes de guardarla
         const hashClave = await bcrypt.hash(clave, 10);
 
-        const [resultado] = await pool.query(
-            `INSERT INTO usuario(nombre, apellido, correo, usuario, clave) VALUES (?, ?, ?, ?, ?);`,
-            [nombre, apellido, correo, usuario, hashClave]
-        );
+        const [resultado] =await Registro(nombre, apellido, correo, usuario, hashClave);
         res.status(200).json({ message: "Usuario registrado con éxito", userId: resultado.insertId });
 
     } catch (error) {

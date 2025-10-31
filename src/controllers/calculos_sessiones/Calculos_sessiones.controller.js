@@ -1,17 +1,24 @@
 import {pool} from '../../conexionDB.js';
 
     export const nuevoCalculo_sessiones=async(req,res)=>{
-
         //verifico que si viene null o undefine el body, tome como json
-        const { id_usuario, nombre, tipo, createdAt} = req.body ?? {};
-        
-        try {
-            const [resultado] = await pool.query('INSERT INTO calc_sessiones(id_usuario, nombre, tipo, createdAt) VALUES (?,?,?,?)', [id_usuario, nombre, tipo, createdAt]);
-            res.status(201).json({ message: "session_creada", id: resultado.insertId });
-        } catch (error) {
-            console.error("Error en el proceso de agregar un calc_session: ", error);
-            res.status(500).json({ error: "Error en el servidor" });
-        }
+        const { id_usuario, nombre, tipo} = req.body;
+            if(!id_usuario || !nombre || !tipo){
+                return res.status(400).json({
+                    ok: false,
+                    code: 'BAD_REQUEST',
+                    message: 'Faltan parámetros requeridos: id_usuario, nombre y tipo.'
+                });
+            }else{
+                try {
+                    const [resultado] = await pool.query('INSERT INTO calc_sessiones(id_usuario, nombre, tipo) VALUES (?,?,?)', [id_usuario, nombre, tipo]);
+                    res.status(201).json({ message: "session_creada", id: resultado.insertId });
+                } catch (error) {
+                    console.error("Error en el proceso de agregar un calc_session: ", error);
+                    res.status(500).json({ error: "Error en el servidor" });
+                }
+
+            }
     }
 
 
@@ -19,6 +26,8 @@ import {pool} from '../../conexionDB.js';
     try {
         // valido que venga el request, y que los datos no esten vacios
         const { id_usuario, nombre, tipo } = req.body ?? {};
+
+        //verifico que no venga vacio o undefine o null
         if (!id_usuario || !nombre || !tipo) {
         return res.status(400).json({
             ok: false,
